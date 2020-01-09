@@ -1,1 +1,3 @@
-console.log("Hello World")
+const bot = require('./twitter/bot')
+
+bot.run()
