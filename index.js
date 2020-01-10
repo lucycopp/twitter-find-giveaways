@@ -1,3 +1,4 @@
-const bot = require('./twitter/bot2')
+const bot = require('./twitter/bot')
 
-bot.makeRequest()
+bot.run()
+
