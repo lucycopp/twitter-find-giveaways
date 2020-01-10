@@ -1,9 +1,30 @@
 const twit = require('twit')
 const config = require('../config')
 const utils = require('../utils/sleep')
+const fetch = require('node-fetch')
+const crypto = require('crypto')
+const OAuth = require('oauth-1.0a')
+
+
 const Twitter = new twit(config)
 
-const count = 100
+const oauth = OAuth({
+    consumer: { key: 'bMJyWnIJ2j4kRKtNAh0ZxzXRP', secret: 'ixCGfjBKUT6akCgvT9XIH2BRkaqTZ5iCspGgjhQErFrlGfhh4c' },
+    signature_method: 'HMAC-SHA1',
+    hash_function(base_string, key) {
+        return crypto
+            .createHmac('sha1', key)
+            .update(base_string)
+            .digest('base64')
+    },
+})
+
+const token = {
+    key: '1207423257999290369-uryMHEjc1RxtWLPq438m2ExA39XciK',
+    secret: 'cRsHyMfnUEPwnpwr72xVM5A5nRAiOiFnaNfFy0vPdun5Y',
+}
+
+const count = 3
 const params = {
     q: 'retweet to win OR rt to win -filter:retweets -filter:replies',
     src: 'hashtag_click',
@@ -12,6 +33,15 @@ const params = {
     result_type: 'latest',
     count: count
 }
+
+async function postData(method, url) {
+    const response = await fetch(url, {
+        method: method,
+        form: oauth.authorize({ status: 'hello' }, token)
+    })
+        return await response.json()
+}
+
 
 const likeTweet = tweetID => {
     Twitter.post('favorites/create', {
@@ -32,20 +62,18 @@ const retweet = tweetID => {
 }
 
 const followUser = userID => {
-    Twitter.post(`friendships/create.json?user_id=${userID}&follow=true`, {
-        id: userID
-    }, (err, response) => {
-        const output = response ? `Followed: ${userID}` : `Error following ${err}`
-        console.log(response)
-    })
+    const url = `https://api.twitter.com/1.1/friendships/create.json?user_id=${userID}&follow=true`
+    postData('POST', url)
+    .then((data) => console.log(data))
+
 }
 
 const handleTweet = (tweet, iteration) => {
     if(typeof tweet != 'undefined') {
         const id = tweet.id_str
-        retweet(id)
-        likeTweet(id)
-        //followUser(tweet.user.id_str)
+        // retweet(id)
+        // likeTweet(id)
+        followUser(tweet.user.id_str)
         console.log(`Completed ${iteration+1}/${count}`)
         utils.sleep(1000)
     }
