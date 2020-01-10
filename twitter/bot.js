@@ -13,7 +13,7 @@ const signInTwitter = new twitter({
     access_token_secret: config.access_token_secret
 })
 let numberOfTweets = 0
-const count = 1
+const count = 100
 let searchString = "retweet to win OR rt to win "
 let resultType = 'latest'
 

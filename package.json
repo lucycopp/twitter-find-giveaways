@@ -5,7 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "node index.js",
+    "run_travel_latest": "node index.js travel",
+    "run_travel_popular": "node index.js travel popular",
+    "run_beauty_latest": "node index.js beauty",
+    "run_beauty_popular": "node index.js beauty popular"
   },
   "repository": {
     "type": "git",
